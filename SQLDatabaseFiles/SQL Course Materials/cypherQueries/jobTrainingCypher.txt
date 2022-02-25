@@ -1,0 +1,169 @@
+//return all products
+LOAD CSV WITH HEADERS FROM 'file:///products.csv' AS line 
+CREATE(product:Product{product_id:toInteger(line.product_id), name:line.name, quantity_in_stock:line.quantity_in_stock, unit_price:line.unit_price})
+SET product.name = line.name,
+	product.product_id =ToInteger(line.product_id),
+    product.quantity_in_stock = line.quantity_in_stock,
+    product.unit_price = ToFloat(line.unit_price)
+RETURN product;
+
+//return all employees
+LOAD CSV WITH HEADERS FROM 'file:///employees.csv' AS line 
+CREATE(employee:Employee{employee_id:toInteger(line.employee_id),first_name:line.first_name,last_name:line.last_name, job_title:line.job_title, salary:line.salary, reports_to:line.reports_to, office_id: line.office_id})
+SET employee.first_name = line.first_name,
+        employee.last_name = line.last_name,
+	employee.employee_id =ToInteger(line.employee_id),
+    employee.job_title = line.job_title,
+    employee.salary = line.salary,
+    employee.reports_to =line.reports_to,
+    employee.office_id = line.office_id
+RETURN employee;
+
+//return all offices
+LOAD CSV WITH HEADERS FROM 'file:///offices.csv' AS line 
+CREATE(office:Office{office_id:toInteger(line.office_id), address:line.address, city:line.city, state:line.state})
+SET office.office_id =ToInteger(line.office_id),
+    office.address = line.address,
+    office.city = line.city,
+    office.state =line.state
+RETURN office;
+
+
+//return all clients
+LOAD CSV WITH HEADERS FROM 'file:///clients.csv' AS line 
+CREATE(client:Client{client_id:toInteger(line.client_id), name:line.name, address:line.address, city:line.city, state:line.state, phone:line.phone})
+SET client.name = line.name,
+	client.address = line.address,
+	client.client_id =ToInteger(line.client_id),
+    client.city = line.city,
+    client.state = line.state,
+    client.phone =line.phone
+RETURN client;
+
+//return all invoices
+LOAD CSV WITH HEADERS FROM 'file:///invoices.csv' AS line 
+CREATE(invoice:Invoices{invoice_id:toInteger(line.invoice_id), number:line.number, client_id:toInteger(line.client_id), 
+invoice_total:line.invoice_total, payment_total:line.payment_total, invoice_date:line.invoice_date,
+due_date: line.due_date, payment_date:line.payment_date})
+SET invoice.invoice_id = ToInteger(line.invoice_id),
+        invoice.number = line.number,
+	invoice.client_id =ToInteger(line.client_id),
+    invoice.invoice_total = line.line.invoice_total,
+    invoice.payment_total = line.payment_total,
+    invoice.invoice_date =line.invoice_date,
+    invoice.due_date = line.due_date,
+    invoice.payment_date = line.payment_date
+RETURN invoice;
+
+//return all payment methods
+LOAD CSV WITH HEADERS FROM 'file:///payment_methods.csv' AS line 
+CREATE(payment_method:Payment_Method{payment_method_id:toInteger(line.payment_method_id), name:line.name})
+SET payment_method.payment_method_id =ToInteger(line.payment_method_id),
+    payment_method.name = line.name
+RETURN payment_method;
+
+//return all payments
+LOAD CSV WITH HEADERS FROM 'file:///payments.csv' AS line 
+CREATE(payment:Payment{payment_id:toInteger(line.payment_id), client_id:toInteger(line.client_id), invoice_id:toInteger(line.invoice_id), date:line.date,
+amount:line.amount, payment_method:line.payment_method})
+SET payment.payment_id =ToInteger(line.payment_id),
+    payment.client_id =ToInteger(line.client_id),
+    payment.invoice_id =ToInteger(line.invoice_id),
+    payment.date = line.date,
+    payment.amount = line.amount,
+    payment.payment_method = line.payment_method
+RETURN payment;
+
+//return all shippers
+LOAD CSV WITH HEADERS FROM 'file:///shippers.csv' AS line 
+CREATE(shipper:Shipper{shipper_id:toInteger(line.shipper_id), name:line.name})
+SET shipper.shipper_id =ToInteger(line.shipper_id),
+    shipper.name = line.name
+RETURN shipper;
+
+//return all orders
+LOAD CSV WITH HEADERS FROM 'file:///orders.csv' AS line 
+CREATE(order:Order{order_id:toInteger(line.order_id), customer_id:toInteger(line.customer_id), order_date:line.order_date,
+status:line.status, comments:line.comments, shipped_date:line.shipped_date, shipper_id:toInteger(line.shipper_id)})
+SET order.order_id = toInteger(line.order_id), 
+    order.customer_id = toInteger(line.customer_id), 
+    order.order_date = line.order_date,
+    order.status = line.status, 
+    order.comments = line.comments,
+    order.shipped_date = line.shipped_date, 
+    order.shipper_id = toInteger(line.shipper_id)
+RETURN order;
+
+
+//return all orderstatuses
+LOAD CSV WITH HEADERS FROM 'file:///order_statuses.csv' AS line 
+CREATE(order_status:Order_Status{order_status_id:toInteger(line.order_status_id), name:line.name})
+SET order_status.order_status_id =ToInteger(line.order_status_id),
+    order_status.name = line.name
+RETURN order_status;
+
+//return all orderitems
+LOAD CSV WITH HEADERS FROM 'file:///order_items.csv' AS line 
+CREATE(order_item:Order_Item{order_id:toInteger(line.order_id), product_id:toInteger(line.product_id), quantity:line.quantity, unit_price:line.unit_price})
+SET order_item.order_id = line.order_id,
+    order_item.product_id = toInteger(line.product_id),
+    order_item.quantity = line.quantity, 
+    order_item.unit_price = line.unit_price
+RETURN order_item;
+
+//return all orderitemnotes
+LOAD CSV WITH HEADERS FROM 'file:///order_item_notes.csv' AS line 
+CREATE(order_item_notes:Order_Item_Notes{note_id:toInteger(line.note_id), order_id:toInteger(line.order_id), product_id:toInteger(line.product_id), note:line.note})
+SET order_item_notes.note_id = toInteger(line.note_id),
+    order_item_notes.order_id = toInteger(line.order_id),
+    order_item_notes.product_id = toInteger(line.product_id),
+    order_item_notes.note = line.note
+RETURN order_item_notes;
+
+
+// return all customers
+LOAD CSV WITH HEADERS FROM 'file:///customers.csv' AS line 
+CREATE(customer:Customer{customer_id:toInteger(line.customer_id), first_name:line.first_name, last_name:line.last_name,
+birth_date:line.birth_date, phone:line.phone, address:line.address, city:line.city, state:line.state, points:line.points })
+SET customer.customer_id = toInteger(line.customer_id),
+    customer.first_name = line.first_name, 
+    customer.last_name = line.last_name,
+    customer.birth_date = line.birth_date, 
+    customer.phone = line.phone,
+    customer.address = line.address,
+    customer.city = line.city,
+    customer.state = line.state, 
+    customer.points = line.points
+RETURN customer;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

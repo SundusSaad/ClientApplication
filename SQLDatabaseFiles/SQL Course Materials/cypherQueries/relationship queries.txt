@@ -1,0 +1,105 @@
+// relation between employees and office
+LOAD CSV WITH HEADERS FROM 'file:///employees.csv' AS line 
+MATCH(employee:Employee{employee_id:toInteger(line.employee_id)})
+MATCH(office:Office{office_id:toInteger(line.office_id)})
+
+CREATE (employee)-[:WORKS_IN]->(office)
+RETURN employee,office;
+
+
+//relation among employees
+LOAD CSV WITH HEADERS FROM 'file:///employees.csv' AS line 
+MATCH(employee:Employee{employee_id:toInteger(line.employee_id)})
+MATCH(manager:Employee{employee_id:toInteger(line.reports_to)})
+
+CREATE (employee)-[:REPORTS_TO]->(manager)
+RETURN employee,manager;
+
+
+//invoice payments of clients
+LOAD CSV WITH HEADERS FROM 'file:///payments.csv' AS line
+MATCH(client:Client{client_id:toInteger(line.client_id)})
+MATCH(invoice:Invoices{invoice_id:toInteger(line.invoice_id)})
+MATCH(payment:Payment{payment_id:toInteger(line.payment_id)})
+MATCH(payment_method:Payment_Method{payment_method_id:toInteger(line.payment_method)})
+
+CREATE (client)-[:HAS_AN_INVOICE]->(invoice)-[:HAS_PAYMENT_DATE]->(payment)-[:HAS_MADE_USING]->(payment_method)
+RETURN client,invoice,payment,payment_method;
+
+
+//invoices and clients
+LOAD CSV WITH HEADERS FROM 'file:///invoices.csv' AS line
+MATCH(client:Client{client_id:toInteger(line.client_id)})
+MATCH(invoice:Invoices{invoice_id:toInteger(line.invoice_id)})
+
+CREATE (client)-[:HAS_AN_INVOICE]->(invoice)
+RETURN client,invoice;
+
+
+//customer and orders
+LOAD CSV WITH HEADERS FROM 'file:///orders.csv' AS line
+MATCH(customer:Customer{customer_id:toInteger(line.customer_id)})
+MATCH(order:Order{order_id:toInteger(line.order_id)})
+
+CREATE (customer)-[:HAS_MADE_AN_ORDER]->(order)
+RETURN customer,order;
+
+
+//order and products
+LOAD CSV WITH HEADERS FROM 'file:///order_items.csv' AS line
+MATCH(product:Product{product_id:toInteger(line.product_id)})
+MATCH(order:Order{order_id:toInteger(line.order_id)})
+
+CREATE(order)-[:OF_PRODUCT]->(product)
+RETURN order,product;
+
+
+//order shipper 
+LOAD CSV WITH HEADERS FROM 'file:///orders.csv' AS line
+MATCH(order:Order{order_id:toInteger(line.order_id)})
+MATCH(shipper:Shipper{shipper_id:toInteger(line.shipper_id)})
+
+CREATE (shipper)-[:HAS_SHIPPED]->(order)
+RETURN order,shipper;
+
+//order and orderstatus
+LOAD CSV WITH HEADERS FROM 'file:///orders.csv' AS line
+MATCH(order:Order{order_id:toInteger(line.order_id)})
+MATCH(order_status:Order_Status{order_status_id:toInteger(line.status)})
+
+CREATE (order)-[:HAS_STATUS]->(order_status)
+RETURN order,order_status;
+
+
+//order and notes
+LOAD CSV WITH HEADERS FROM 'file:///order_item_notes.csv' AS line 
+MATCH(order_item_notes:Order_Item_Notes{note_id:toInteger(line.note_id)})
+MATCH(order:Order{order_id:toInteger(line.order_Id)})
+
+CREATE (order)-[:HAS_NOTES]->(order_item_notes)
+RETURN order,order_item_notes;
+
+
+//orderitems and products
+LOAD CSV WITH HEADERS FROM 'file:///order_items.csv' AS line
+MATCH(product:Product{product_id:toInteger(line.product_id)})
+MATCH(order_item:Order_Item{quantity:line.quantity})
+
+CREATE (product)-[:IN_QUANTITY]->(order_item)
+RETURN product,order_item;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
